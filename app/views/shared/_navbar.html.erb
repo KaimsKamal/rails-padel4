@@ -1,0 +1,62 @@
+<nav class="padel-navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <%= link_to root_path, class: "brand-link" do %>
+        <span class="brand-icon">🎾</span>
+        <span class="brand-text">Padel<span class="brand-highlight">Pro</span></span>
+      <% end %>
+    </div>
+
+    <div class="navbar-menu" id="navbarMenu">
+      <% if user_signed_in? %>
+        <%= link_to "Dashboard", dashboard_path, class: "nav-link" %>
+        <%= link_to "Courts", courts_path, class: "nav-link" %>
+        <%= link_to "Mes Réservations", reservations_path, class: "nav-link" %>
+        <%= link_to "Planning Hebdo", weekly_reservations_path, class: "nav-link" %>
+        <div class="nav-user-menu">
+          <button class="user-menu-button" onclick="toggleUserMenu()">
+            <span class="user-avatar">👤</span>
+            <span class="user-email"><%= current_user.email %></span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <%= link_to "Mon Profil", edit_user_registration_path, class: "dropdown-item" %>
+            <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "dropdown-item logout-btn" %>
+          </div>
+        </div>
+      <% else %>
+        <%= link_to "Connexion", new_user_session_path, class: "nav-link-btn login-btn" %>
+        <%= link_to "Inscription", new_user_registration_path, class: "nav-link-btn signup-btn" %>
+      <% end %>
+    </div>
+
+    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  function toggleUserMenu() {
+    document.getElementById('userDropdown').classList.toggle('show');
+  }
+
+  function toggleMobileMenu() {
+    document.getElementById('navbarMenu').classList.toggle('mobile-show');
+  }
+
+  // Close dropdown when clicking outside
+  window.onclick = function(event) {
+    if (!event.target.matches('.user-menu-button') && !event.target.closest('.user-menu-button')) {
+      var dropdowns = document.getElementsByClassName("user-dropdown");
+      for (var i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains('show')) {
+          openDropdown.classList.remove('show');
+        }
+      }
+    }
+  }
+</script>

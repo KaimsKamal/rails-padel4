@@ -1,0 +1,108 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1 class="page-title">📋 Mes Réservations</h1>
+    <div style="display: flex; gap: 0.5rem;">
+      <%= link_to "📅 Planning Hebdo", weekly_reservations_path, class: "btn btn-secondary" %>
+      <%= link_to "Nouvelle réservation", new_reservation_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <% if @reservations.any? %>
+    <div style="display: grid; gap: 2rem;">
+      <% @reservations.each do |reservation| %>
+        <div class="card">
+          <div class="card-body">
+            <div style="display: grid; grid-template-columns: 1fr auto; gap: 2rem; margin-bottom: 1.5rem;">
+              <!-- Informations principales -->
+              <div>
+                <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--padel-dark); margin-bottom: 0.5rem;">
+                  🎾 <%= link_to reservation.court.name, court_path(reservation.court), style: "color: var(--padel-primary); text-decoration: none;" %>
+                </h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; color: var(--padel-gray); margin-bottom: 1rem;">
+                  <span style="font-weight: 600;">
+                    📅 <%= reservation.reservation_date.strftime("%d/%m/%Y") %>
+                  </span>
+                  <span style="font-weight: 600;">
+                    🕐 <%= reservation.start_time.strftime("%H:%M") %> - <%= reservation.end_time.strftime("%H:%M") %>
+                  </span>
+                  <span class="badge <%= case reservation.status
+                    when 'confirmee' then 'badge-success'
+                    when 'en_attente' then 'badge-warning'
+                    when 'annulee' then 'badge-danger'
+                    end %>">
+                    <%= reservation.status.gsub('_', ' ').capitalize %>
+                  </span>
+                </div>
+
+                <!-- Aperçu des joueurs -->
+                <% if reservation.players.any? %>
+                  <div style="margin-top: 1rem;">
+                    <div style="font-size: 0.875rem; font-weight: 600; color: var(--padel-dark); margin-bottom: 0.5rem;">
+                      👥 Joueurs (<%= reservation.players.count %>/4)
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                      <% reservation.players.order(:position).each do |player| %>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--padel-light-gray); padding: 0.5rem 0.75rem; border-radius: 9999px;">
+                          <span style="font-size: 1.25rem;"><%= player.avatar %></span>
+                          <span style="font-size: 0.875rem; font-weight: 600; color: var(--padel-dark);">
+                            <%= player.display_name %>
+                          </span>
+                        </div>
+                      <% end %>
+                      <% (4 - reservation.players.count).times do %>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--padel-light-gray); padding: 0.5rem 0.75rem; border-radius: 9999px; opacity: 0.5;">
+                          <span style="font-size: 1.25rem;">👤</span>
+                          <span style="font-size: 0.875rem; color: var(--padel-gray);">Libre</span>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% else %>
+                  <div style="margin-top: 1rem; padding: 0.75rem; background: var(--padel-light-gray); border-radius: 0.5rem;">
+                    <p style="font-size: 0.875rem; color: var(--padel-gray); margin: 0;">
+                      Aucun joueur ajouté pour cette réservation
+                    </p>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Mini terrain (optionnel pour certaines résolutions) -->
+              <div style="display: none; min-width: 200px;">
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 1rem; border-radius: 0.75rem;">
+                  <div style="font-size: 0.75rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem; color: var(--padel-dark);">
+                    Terrain
+                  </div>
+                  <!-- Version simplifiée du terrain -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-footer" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <%= link_to "Voir détails", reservation_path(reservation), class: "btn btn-secondary" %>
+              <% if reservation.status != 'annulee' %>
+                <%= button_to "Annuler", reservation_path(reservation),
+                    method: :delete,
+                    data: { confirm: "Êtes-vous sûr de vouloir annuler cette réservation ?" },
+                    class: "btn btn-danger" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">🎾</div>
+        <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 0.5rem;">
+          Aucune réservation
+        </h3>
+        <p style="color: var(--padel-gray); margin-bottom: 1.5rem;">
+          Vous n'avez aucune réservation pour le moment.
+        </p>
+        <%= link_to "Réserver un court", new_reservation_path, class: "btn btn-primary", style: "display: inline-block;" %>
+      </div>
+    </div>
+  <% end %>
+</div>

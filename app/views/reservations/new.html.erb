@@ -1,0 +1,84 @@
+<div class="dashboard-container">
+  <%= link_to "← Retour", courts_path, style: "color: var(--padel-primary); text-decoration: none; font-weight: 600; margin-bottom: 2rem; display: inline-block;" %>
+
+  <div class="form-container" style="max-width: 700px;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <span style="font-size: 3rem;">📅</span>
+      <h1 class="form-title">Nouvelle Réservation</h1>
+    </div>
+
+    <%= form_with(model: @reservation, url: reservations_path, local: true) do |f| %>
+      <% if @reservation.errors.any? %>
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+          <h3 style="font-weight: 700; margin-bottom: 0.5rem;">
+            <%= pluralize(@reservation.errors.count, "erreur") %> empêche l'enregistrement:
+          </h3>
+          <ul style="list-style: disc; padding-left: 1.5rem;">
+            <% @reservation.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= f.label :court_id, "Court", class: "form-label" %>
+        <%= f.select :court_id,
+            options_from_collection_for_select(@courts, :id, :name, @reservation.court_id),
+            { prompt: "Sélectionner un court" },
+            { class: "form-select" } %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :reservation_date, "Date de réservation", class: "form-label" %>
+        <%= f.date_field :reservation_date,
+            min: Date.today,
+            class: "form-input" %>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group">
+          <%= f.label :start_time, "Heure de début", class: "form-label" %>
+          <%= f.time_field :start_time, class: "form-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :end_time, "Heure de fin", class: "form-label" %>
+          <%= f.time_field :end_time, class: "form-input" %>
+        </div>
+      </div>
+
+      <div style="border-top: 2px solid var(--padel-light-gray); padding-top: 1.5rem; margin-top: 1rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 1rem;">
+          Informations du client
+        </h2>
+
+        <div class="form-group">
+          <%= f.label :customer_name, "Nom complet", class: "form-label" %>
+          <%= f.text_field :customer_name,
+              placeholder: "Jean Dupont",
+              class: "form-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :customer_email, "Email", class: "form-label" %>
+          <%= f.email_field :customer_email,
+              placeholder: "jean.dupont@example.com",
+              class: "form-input" %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :customer_phone, "Téléphone", class: "form-label" %>
+          <%= f.telephone_field :customer_phone,
+              placeholder: "06 12 34 56 78",
+              class: "form-input" %>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <%= f.submit "Créer la réservation", class: "form-submit" %>
+        <%= link_to "Annuler", courts_path, class: "btn btn-secondary", style: "width: 100%; text-align: center; padding: 1rem;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+<div class="dashboard-container" style="max-width: 900px;">
+  <%= link_to "← Retour aux réservations", reservations_path, style: "color: var(--padel-primary); text-decoration: none; font-weight: 600; margin-bottom: 2rem; display: inline-block;" %>
+
+  <div class="card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+      <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--padel-dark); margin: 0;">
+          🎾 Détails de la Réservation
+        </h1>
+        <span class="badge <%= case @reservation.status
+          when 'confirmee' then 'badge-success'
+          when 'en_attente' then 'badge-warning'
+          when 'annulee' then 'badge-danger'
+          end %>" style="font-size: 1rem; padding: 0.5rem 1rem;">
+          <%= @reservation.status.gsub('_', ' ').capitalize %>
+        </span>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- Terrain de Padel avec les joueurs -->
+      <div style="margin-bottom: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 1rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 1rem; text-align: center;">
+          🏟️ Composition des équipes
+        </h3>
+        <%= render "shared/padel_court", reservation: @reservation, editable: false %>
+      </div>
+
+      <!-- Informations de la réservation -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 0.75rem;">
+            📍 Informations du court
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <p style="color: var(--padel-gray); margin: 0;">
+              <span style="font-weight: 600;">Court:</span>
+              <%= link_to @reservation.court.name, court_path(@reservation.court), style: "color: var(--padel-primary); text-decoration: none; font-weight: 600;" %>
+            </p>
+            <p style="color: var(--padel-gray); margin: 0;">
+              <span style="font-weight: 600;">Type:</span>
+              <%= @reservation.court.court_type.capitalize %>
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 0.75rem;">
+            📅 Date et horaire
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <p style="color: var(--padel-gray); margin: 0;">
+              <span style="font-weight: 600;">Date:</span>
+              <%= @reservation.reservation_date.strftime("%d/%m/%Y") %>
+            </p>
+            <p style="color: var(--padel-gray); margin: 0;">
+              <span style="font-weight: 600;">Horaire:</span>
+              <%= @reservation.start_time.strftime("%H:%M") %> - <%= @reservation.end_time.strftime("%H:%M") %>
+            </p>
+            <p style="color: var(--padel-gray); margin: 0;">
+              <span style="font-weight: 600;">Durée:</span>
+              <%= ((Time.parse(@reservation.end_time.to_s) - Time.parse(@reservation.start_time.to_s)) / 3600).to_i %> heure(s)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations du client -->
+      <div style="border-top: 2px solid var(--padel-light-gray); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 0.75rem;">
+          👤 Informations du contact
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <p style="color: var(--padel-gray); margin: 0;">
+            <span style="font-weight: 600;">Nom:</span>
+            <%= @reservation.customer_name %>
+          </p>
+          <p style="color: var(--padel-gray); margin: 0;">
+            <span style="font-weight: 600;">Email:</span>
+            <a href="mailto:<%= @reservation.customer_email %>" style="color: var(--padel-primary); text-decoration: none;">
+              <%= @reservation.customer_email %>
+            </a>
+          </p>
+          <p style="color: var(--padel-gray); margin: 0;">
+            <span style="font-weight: 600;">Téléphone:</span>
+            <a href="tel:<%= @reservation.customer_phone %>" style="color: var(--padel-primary); text-decoration: none;">
+              <%= @reservation.customer_phone %>
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <% if @reservation.status != 'annulee' %>
+        <div class="alert alert-warning" style="margin-bottom: 1rem;">
+          <strong>Note:</strong> Vous pouvez annuler cette réservation si nécessaire.
+        </div>
+
+        <%= button_to "Annuler cette réservation",
+            reservation_path(@reservation),
+            method: :delete,
+            data: { confirm: "Êtes-vous sûr de vouloir annuler cette réservation ? Cette action est irréversible." },
+            class: "btn btn-danger",
+            style: "width: 100%; padding: 1rem; font-size: 1.125rem;" %>
+      <% else %>
+        <div class="alert alert-error">
+          Cette réservation a été annulée.
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<footer class="padel-footer">
+  <div class="footer-container">
+    <div class="footer-grid">
+      <div class="footer-column">
+        <div class="footer-brand">
+          <span class="brand-icon">🎾</span>
+          <span class="brand-text">Padel<span class="brand-highlight">Pro</span></span>
+        </div>
+        <p class="footer-description">
+          La plateforme de réservation de terrains de padel la plus simple et efficace.
+          Réservez votre court en quelques clics.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Facebook">📘</a>
+          <a href="#" class="social-link" aria-label="Instagram">📷</a>
+          <a href="#" class="social-link" aria-label="Twitter">🐦</a>
+          <a href="#" class="social-link" aria-label="YouTube">📹</a>
+        </div>
+      </div>
+
+      <div class="footer-column">
+        <h3 class="footer-title">Navigation</h3>
+        <ul class="footer-links">
+          <% if user_signed_in? %>
+            <li><%= link_to "Dashboard", dashboard_path, class: "footer-link" %></li>
+            <li><%= link_to "Courts", courts_path, class: "footer-link" %></li>
+            <li><%= link_to "Réservations", reservations_path, class: "footer-link" %></li>
+          <% else %>
+            <li><%= link_to "Accueil", root_path, class: "footer-link" %></li>
+            <li><%= link_to "Connexion", new_user_session_path, class: "footer-link" %></li>
+            <li><%= link_to "Inscription", new_user_registration_path, class: "footer-link" %></li>
+          <% end %>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3 class="footer-title">Support</h3>
+        <ul class="footer-links">
+          <li><%= link_to "À propos", about_path, class: "footer-link" %></li>
+          <li><%= link_to "Contact", contact_path, class: "footer-link" %></li>
+          <li><a href="#" class="footer-link">FAQ</a></li>
+          <li><a href="#" class="footer-link">Conditions d'utilisation</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3 class="footer-title">Contact</h3>
+        <ul class="footer-contact">
+          <li>📍 123 Avenue du Padel, Paris</li>
+          <li>📞 +33 1 23 45 67 89</li>
+          <li>✉️ contact@padelpro.fr</li>
+          <li>🕐 Lun-Dim: 8h-22h</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <%= Date.today.year %> PadelPro. Tous droits réservés.</p>
+      <p class="footer-love">Fait avec ❤️ pour les amateurs de padel</p>
+    </div>
+  </div>
+</footer>

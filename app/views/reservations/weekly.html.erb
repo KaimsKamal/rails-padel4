@@ -1,0 +1,154 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1 class="page-title">📅 Planning de la Semaine</h1>
+    <div style="display: flex; gap: 0.5rem;">
+      <%= link_to "📋 Vue Liste", reservations_path, class: "btn btn-secondary" %>
+      <%= link_to "Nouvelle réservation", new_reservation_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <!-- Navigation entre semaines -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-body" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem;">
+      <%= link_to "← Semaine précédente", weekly_reservations_path(week_start: (@week_start - 7.days).to_s), class: "btn btn-secondary" %>
+
+      <div style="text-align: center;">
+        <div style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark);">
+          <%= @week_start.strftime("%d %B %Y") %> - <%= @week_end.strftime("%d %B %Y") %>
+        </div>
+        <%= link_to "Aujourd'hui", weekly_reservations_path, class: "btn btn-secondary", style: "margin-top: 0.5rem; font-size: 0.875rem;" %>
+      </div>
+
+      <%= link_to "Semaine suivante →", weekly_reservations_path(week_start: (@week_start + 7.days).to_s), class: "btn btn-secondary" %>
+    </div>
+  </div>
+
+  <!-- Légende des courts -->
+  <div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-body">
+      <div style="font-weight: 700; color: var(--padel-dark); margin-bottom: 0.75rem;">
+        🎾 Courts
+      </div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <% @courts.each_with_index do |court, index| %>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div style="width: 20px; height: 20px; border-radius: 4px; background: hsl(<%= index * 40 %>, 70%, 60%);"></div>
+            <span style="font-weight: 600; color: var(--padel-dark);"><%= court.name %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Planning -->
+  <div class="card">
+    <div class="card-body" style="padding: 0; overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; min-width: 900px;">
+        <thead>
+          <tr style="background: var(--padel-light-gray); border-bottom: 2px solid var(--padel-secondary);">
+            <th style="padding: 1rem; text-align: left; font-weight: 700; color: var(--padel-dark); min-width: 80px;">
+              Heure
+            </th>
+            <% @days.each do |day| %>
+              <th style="padding: 1rem; text-align: center; font-weight: 700; color: var(--padel-dark); border-left: 1px solid var(--padel-secondary);">
+                <div style="font-size: 0.875rem; color: var(--padel-gray);">
+                  <%= day.strftime("%A") %>
+                </div>
+                <div style="font-size: 1.125rem; margin-top: 0.25rem;">
+                  <%= day.strftime("%d/%m") %>
+                </div>
+                <% if day == Date.today %>
+                  <div style="margin-top: 0.25rem;">
+                    <span class="badge badge-success" style="font-size: 0.75rem;">Aujourd'hui</span>
+                  </div>
+                <% end %>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @hours.each do |hour| %>
+            <tr style="border-bottom: 1px solid var(--padel-light-gray);">
+              <td style="padding: 0.75rem; font-weight: 600; color: var(--padel-gray); vertical-align: top;">
+                <%= "%02d:00" % hour %>
+              </td>
+              <% @days.each do |day| %>
+                <td style="padding: 0.5rem; border-left: 1px solid var(--padel-light-gray); vertical-align: top; min-height: 60px; position: relative;">
+                  <div style="min-height: 60px; display: flex; flex-direction: column; gap: 0.25rem;">
+                    <%
+                      # Trouver les réservations pour ce jour et cette heure
+                      day_reservations = @reservations.select do |r|
+                        r.reservation_date == day &&
+                        r.start_time.hour <= hour &&
+                        r.end_time.hour > hour
+                      end
+                    %>
+
+                    <% day_reservations.each do |reservation| %>
+                      <%
+                        court_index = @courts.index(reservation.court) || 0
+                        color = "hsl(#{court_index * 40}, 70%, 60%)"
+                      %>
+                      <% if reservation.start_time.hour == hour %>
+                        <%= link_to reservation_path(reservation), style: "text-decoration: none;" do %>
+                          <div style="background: <%= color %>; color: white; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-bottom: 0.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <div style="font-weight: 700; margin-bottom: 0.125rem;">
+                              <%= reservation.court.name %>
+                            </div>
+                            <div style="font-size: 0.7rem; opacity: 0.95;">
+                              <%= reservation.start_time.strftime("%H:%M") %> - <%= reservation.end_time.strftime("%H:%M") %>
+                            </div>
+                            <div style="font-size: 0.7rem; opacity: 0.95; margin-top: 0.125rem;">
+                             👤 <%= reservation.user_id == current_user.id ? reservation.customer_name : "Réservé" %>
+                            </div>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Résumé de la semaine -->
+  <div class="card" style="margin-top: 1.5rem;">
+    <div class="card-body">
+      <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--padel-dark); margin-bottom: 1rem;">
+        📊 Résumé de la semaine
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div style="background: var(--padel-light-gray); padding: 1rem; border-radius: 0.5rem;">
+          <div style="font-size: 0.875rem; color: var(--padel-gray); margin-bottom: 0.25rem;">
+            Total réservations
+          </div>
+          <div style="font-size: 2rem; font-weight: 800; color: var(--padel-primary);">
+            <%= @reservations.count %>
+          </div>
+        </div>
+
+        <div style="background: var(--padel-light-gray); padding: 1rem; border-radius: 0.5rem;">
+          <div style="font-size: 0.875rem; color: var(--padel-gray); margin-bottom: 0.25rem;">
+            Réservations confirmées
+          </div>
+          <div style="font-size: 2rem; font-weight: 800; color: #22c55e;">
+            <%= @reservations.select { |r| r.status == 'confirmee' }.count %>
+          </div>
+        </div>
+
+        <div style="background: var(--padel-light-gray); padding: 1rem; border-radius: 0.5rem;">
+          <div style="font-size: 0.875rem; color: var(--padel-gray); margin-bottom: 0.25rem;">
+            En attente
+          </div>
+          <div style="font-size: 2rem; font-weight: 800; color: #f59e0b;">
+            <%= @reservations.select { |r| r.status == 'en_attente' }.count %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+<section class="landing-hero">
+  <div class="hero-content">
+    <h1 class="hero-title">
+      Réservez votre terrain de
+      <span class="hero-title-highlight">Padel</span>
+    </h1>
+    <p class="hero-subtitle">
+      La plateforme la plus simple pour réserver vos terrains de padel.
+      Trouvez le créneau parfait en quelques clics.
+    </p>
+    <div class="hero-cta">
+      <%= link_to "Commencer maintenant", new_user_registration_path, class: "cta-button cta-primary" %>
+      <%= link_to "Se connecter", new_user_session_path, class: "cta-button cta-secondary" %>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <h2 class="section-title">Pourquoi choisir PadelPro ?</h2>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3 class="feature-title">Réservation Rapide</h3>
+      <p class="feature-description">
+        Réservez votre terrain en moins de 2 minutes. Interface intuitive et processus simplifié.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🎾</div>
+      <h3 class="feature-title">Terrains Variés</h3>
+      <p class="feature-description">
+        Choisissez parmi nos courts intérieurs, extérieurs et couverts. Tous équipés et entretenus.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">📅</div>
+      <h3 class="feature-title">Gestion Facile</h3>
+      <p class="feature-description">
+        Gérez toutes vos réservations depuis votre dashboard. Modifiez ou annulez en un clic.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3 class="feature-title">Notifications</h3>
+      <p class="feature-description">
+        Recevez des rappels par email avant vos sessions. Ne manquez plus jamais une partie.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">💳</div>
+      <h3 class="feature-title">Paiement Sécurisé</h3>
+      <p class="feature-description">
+        Paiements en ligne sécurisés. Confirmation instantanée de votre réservation.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <h3 class="feature-title">Communauté</h3>
+      <p class="feature-description">
+        Rejoignez notre communauté de passionnés. Trouvez des partenaires de jeu.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="features-section" style="background: white; padding: 5rem 2rem; margin: 0;">
+  <div style="max-width: 1280px; margin: 0 auto;">
+    <h2 class="section-title">Prêt à jouer ?</h2>
+    <div style="text-align: center; margin-top: 2rem;">
+      <p style="font-size: 1.25rem; color: var(--padel-gray); margin-bottom: 2rem;">
+        Rejoignez des milliers de joueurs qui utilisent déjà PadelPro pour réserver leurs terrains.
+      </p>
+      <%= link_to "Créer un compte gratuit", new_user_registration_path, class: "cta-button cta-primary", style: "display: inline-block;" %>
+    </div>
+  </div>
+</section>
