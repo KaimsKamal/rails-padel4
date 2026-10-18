@@ -14,7 +14,7 @@
 
       <div style="text-align: center;">
         <div style="font-size: 1.25rem; font-weight: 700; color: var(--padel-dark);">
-          <%= @week_start.strftime("%d %B %Y") %> - <%= @week_end.strftime("%d %B %Y") %>
+          <%= date_long_fr(@week_start) %> - <%= date_long_fr(@week_end) %>
         </div>
         <%= link_to "Aujourd'hui", weekly_reservations_path, class: "btn btn-secondary", style: "margin-top: 0.5rem; font-size: 0.875rem;" %>
       </div>
@@ -52,7 +52,7 @@
             <% @days.each do |day| %>
               <th style="padding: 1rem; text-align: center; font-weight: 700; color: var(--padel-dark); border-left: 1px solid var(--padel-secondary);">
                 <div style="font-size: 0.875rem; color: var(--padel-gray);">
-                  <%= day.strftime("%A") %>
+                  <%= day_name_fr(day) %>
                 </div>
                 <div style="font-size: 1.125rem; margin-top: 0.25rem;">
                   <%= day.strftime("%d/%m") %>

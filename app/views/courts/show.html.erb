@@ -8,7 +8,7 @@
           🎾 <%= @court.name %>
         </h1>
         <span class="badge badge-success" style="font-size: 1rem; padding: 0.5rem 1rem;">
-          <%= @court.status.capitalize %>
+          <%= status_label(@court.status) %>
         </span>
       </div>
     </div>
@@ -20,7 +20,7 @@
             Type de court
           </h3>
           <p style="color: var(--padel-gray);">
-            <%= @court.court_type.capitalize %>
+            <%= court_type_label(@court.court_type) %>
           </p>
         </div>
 
@@ -62,7 +62,7 @@
                   </p>
                 </div>
                 <span class="badge badge-success">
-                  <%= reservation.status.gsub('_', ' ').capitalize %>
+                  <%= status_label(reservation.status) %>
                 </span>
               </div>
             </div>

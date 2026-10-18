@@ -14,7 +14,7 @@
                 <%= court.name %>
               </h2>
               <span class="badge badge-success">
-                <%= court.status.capitalize %>
+                <%= status_label(court.status) %>
               </span>
             </div>
           </div>
@@ -23,7 +23,7 @@
             <div style="margin-bottom: 1rem;">
               <p style="color: var(--padel-gray); margin: 0.5rem 0;">
                 <strong style="color: var(--padel-dark);">Type:</strong>
-                <%= court.court_type.capitalize %>
+                <%= court_type_label(court.court_type) %>
               </p>
 
               <% if court.description.present? %>

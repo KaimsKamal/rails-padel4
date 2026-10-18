@@ -12,7 +12,7 @@
           when 'en_attente' then 'badge-warning'
           when 'annulee' then 'badge-danger'
           end %>" style="font-size: 1rem; padding: 0.5rem 1rem;">
-          <%= @reservation.status.gsub('_', ' ').capitalize %>
+          <%= status_label(@reservation.status) %>
         </span>
       </div>
     </div>
@@ -39,7 +39,7 @@
             </p>
             <p style="color: var(--padel-gray); margin: 0;">
               <span style="font-weight: 600;">Type:</span>
-              <%= @reservation.court.court_type.capitalize %>
+              <%= court_type_label(@reservation.court.court_type) %>
             </p>
           </div>
         </div>
